@@ -7,7 +7,8 @@ def main():
 
 
 def convert(s):
-    pattern = r'(0?[1-9]|1[0-2]):([0-5][0-9]) (AM|PM) to (0?[1-9]|1[0-2]):([0-5][0-9]) (AM|PM)'
+    pattern = r'(0?[1-9]|1[0-2]):?([0-5][0-9])? (AM|PM) to (0?[1-9]|1[0-2]):?([0-5][0-9])? (AM|PM)'
+
 
     match = re.search(pattern,s)
 
@@ -39,16 +40,11 @@ def convert(s):
             "11 PM" : "23"
         }
 
-        print(match.group(0))
-        print(match.group(1))
-        print(match.group(2))
-        print(match.group(3))
-
         if (start_time := match.group(1) + " " + match.group(3)) in hours_dict and (end_time := match.group(4) + " " + match.group(6)) in hours_dict:
             start_hours = hours_dict[start_time]
             end_hours = hours_dict[end_time]
-            converted_start_time = f"{start_hours}:{match.group(2)}"
-            converted_end_time = f"{end_hours}:{match.group(5)}"
+            converted_start_time = f"{start_hours}:{match.group(2)}" if match.group(2) else f"{start_hours}:00"
+            converted_end_time = f"{end_hours}:{match.group(5)}" if match.group(5) else f"{end_hours}:00"
             return f"{converted_start_time} to {converted_end_time}"
     else:
         raise ValueError("Invalid time format. Please enter time in the format 'hh:mm AM/PM to hh:mm AM/PM'.")
